@@ -1,24 +1,43 @@
-turtles-own [ val new-val ] ; a node's past and current quantity, represented as size
-links-own [ current-flow ]  ; valor atual
+breed[ nos no ]        ;nós
+breed [ acoes acao ]   ;ações
+
+nos-own[ modificador ]                                           ;modificador é o que é alterado quando passa por um determinado nó
+acoes-own[ gravidade-acao gravidade-fato valor-acao valor-fato ] ;ações tem a informação sobre o acontecido, a empresa tem acesso só ao valor-acao e a gravidade-acao
 
 globals[
-  total-spent          ;total gasto pela empresa
-  derivate             ;derivada do gasto total
-  
+  total-gasto
 ]
 
 to setup
   clear-all
+  ask patches [ set pcolor white ]
+  cria-modelo
+  set total-gasto 0
+  update-globals
+  reset-ticks
+end
+
+to cria-modelo
+  set-default-shape nos "circle"
+end
+
+to go
+end
+
+to step
+end
+
+to update-globals
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
-210
+326
 10
-649
-470
+780
+485
 16
 16
-13.0
+13.455
 1
 10
 1
@@ -37,6 +56,242 @@ GRAPHICS-WINDOW
 1
 ticks
 30.0
+
+BUTTON
+197
+10
+271
+43
+Vai
+go
+T
+1
+T
+OBSERVER
+NIL
+D
+NIL
+NIL
+1
+
+BUTTON
+9
+10
+105
+43
+Inicializar
+setup
+NIL
+1
+T
+OBSERVER
+NIL
+A
+NIL
+NIL
+1
+
+BUTTON
+115
+10
+190
+43
+passo
+step
+NIL
+1
+T
+OBSERVER
+NIL
+S
+NIL
+NIL
+1
+
+CHOOSER
+8
+63
+158
+108
+estrategia
+estrategia
+"negocia tudo" "luta tudo" "luta +" "luta -" "luta 0" "negocia +" "negocia -" "negocia 0"
+0
+
+PLOT
+798
+10
+1248
+329
+Total Gasto
+tick
+total-gasto
+0.0
+100.0
+0.0
+1000.0
+true
+false
+"" ""
+PENS
+"default" 1.0 0 -16777216 true "" "plot count total-gasto"
+
+SWITCH
+166
+70
+314
+103
+Juiz-aleatório
+Juiz-aleatório
+1
+1
+-1000
+
+SLIDER
+9
+113
+315
+146
+proporcao-acao-gravidade1-valorMaior
+proporcao-acao-gravidade1-valorMaior
+0
+100
+51
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+9
+150
+315
+183
+proporcao-acao-gravidade1-valorCorreto
+proporcao-acao-gravidade1-valorCorreto
+0
+100
+50
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+10
+187
+315
+220
+proporcao-acao-gravidade1-valorMenor
+proporcao-acao-gravidade1-valorMenor
+0
+100
+50
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+10
+224
+317
+257
+proporcao-acao-gravidade2-valorMaior
+proporcao-acao-gravidade2-valorMaior
+0
+100
+50
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+10
+262
+318
+295
+proporcao-acao-gravidade2-valorCorreto
+proporcao-acao-gravidade2-valorCorreto
+0
+100
+50
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+11
+300
+319
+333
+proporcao-acao-gravidade2-valorMenor
+proporcao-acao-gravidade2-valorMenor
+0
+100
+50
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+9
+338
+320
+371
+proporcao-acao-gravidade3-valorMaior
+proporcao-acao-gravidade3-valorMaior
+0
+100
+50
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+10
+376
+321
+409
+proporcao-acao-gravidade3-valorCorreto
+proporcao-acao-gravidade3-valorCorreto
+0
+100
+50
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+10
+413
+321
+446
+proporcao-acao-gravidade3-valorMenor
+proporcao-acao-gravidade3-valorMenor
+0
+100
+50
+1
+1
+NIL
+HORIZONTAL
+
+MONITOR
+800
+338
+879
+383
+valor total
+total-gasto
+17
+1
+11
 
 @#$#@#$#@
 ## WHAT IS IT?
