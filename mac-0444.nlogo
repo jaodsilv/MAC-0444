@@ -1,33 +1,90 @@
 breed[ nos no ]        ;nós
 breed [ acoes acao ]   ;ações
 
-nos-own[ modificador ]                                           ;modificador é o que é alterado quando passa por um determinado nó
+nos-own[ modificador visitas ]                                           ;modificador é o que é alterado quando passa por um determinado nó
 acoes-own[ gravidade-acao gravidade-fato valor-acao valor-fato ] ;ações tem a informação sobre o acontecido, a empresa tem acesso só ao valor-acao e a gravidade-acao
 
 globals[
   total-gasto
+  valor-atual
+  decisoes
+  negociacoes
+  decisoes-com-negociacoes
 ]
 
 to setup
   clear-all
   ask patches [ set pcolor white ]
   cria-modelo
-  set total-gasto 0
-  update-globals
+  zera-globals
   reset-ticks
 end
 
 to cria-modelo
   set-default-shape nos "circle"
+  create-nos 11
+  
+  ask no 0 [ set color green ]
+  ask no 1 [ set color yellow ]
+  ask no 2 [ set color red ]
+  ask no 3 [ set color green create-links-from (turtle-set no 0 no 1) ]
+  ask no 4 [ set color yellow create-links-from (turtle-set no 0 no 1 no 2) ]
+  ask no 5 [ set color orange create-links-from (turtle-set no 1 no 2) ]
+  ask no 6 [ set color red create-link-from no 2 ]
+  ask no 7 [ set color black create-links-from (turtle-set no 3 no 4 no 5 no 6) ]
+  ask no 8 [ set color green create-link-from no 7 ]
+  ask no 9 [ set color yellow create-links-from (turtle-set no 7 no 8) ]
+  ask no 10 [ set color green create-links-from (turtle-set no 8 no 9) ]
+  
+  ask nos
+  [
+    set label-color black
+    ;update-aparencia-no
+  ]
+  create-acoes 1
+  
 end
 
 to go
+  cria-nova-acao
+  manda-para-advogado
+  advogado-decide-caminho
+  finaliza
 end
 
-to step
+to zera-globals
+  set total-gasto 0
+  set decisoes 0
+  set negociacoes 0
+  set decisoes-com-negociacoes 0
 end
 
-to update-globals
+to cria-nova-acao
+  ;um random para saber qual tipo de acao virá
+  ;gera uma acao do tipo certo(zerando uma que já exista, a 0)
+  ;faz o passo de andar para o valor
+end
+
+to manda-para-advogado
+  ;faz o passo de andar do valor para o advogado
+end
+
+to advogado-decide-caminho
+  ;um monte de se então; e.g. 
+  ;se estrategia = "negocia tudo" então negocia
+end
+
+to negocia
+  ;random se ela deu sucesso ou fracasso
+end
+
+to juiz-decide
+  ;se juiz-aleatorio então aleatoriza valor
+  ;caso contrario
+  set valor-atual valor-atual + [valor-fato] of acao 0
+end
+
+to finaliza
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
@@ -96,8 +153,8 @@ BUTTON
 10
 190
 43
-passo
-step
+Passo
+go
 NIL
 1
 T
@@ -122,10 +179,10 @@ PLOT
 798
 10
 1248
-329
+180
 Total Gasto
-tick
-total-gasto
+Tempo
+Total Gasto
 0.0
 100.0
 0.0
@@ -134,7 +191,7 @@ true
 false
 "" ""
 PENS
-"default" 1.0 0 -16777216 true "" "plot count total-gasto"
+"default" 1.0 0 -16777216 true "" "plot total-gasto"
 
 SWITCH
 166
@@ -282,16 +339,44 @@ proporcao-acao-gravidade3-valorMenor
 NIL
 HORIZONTAL
 
-MONITOR
-800
-338
-879
-383
-valor total
-total-gasto
-17
-1
-11
+PLOT
+799
+186
+1248
+336
+Decisoes
+Tempo
+Decisoes
+0.0
+10000.0
+0.0
+1000.0
+true
+true
+"" ""
+PENS
+"Sucesso" 1.0 0 -10899396 true "" "plot sucesso-decisoes"
+"Fracasso" 1.0 0 -8053223 true "" "plot fracasso-decisoes"
+
+PLOT
+798
+341
+1247
+491
+Decisões X Negociações
+Tempo
+NIL
+0.0
+10.0
+0.0
+10.0
+true
+true
+"" ""
+PENS
+"Só Negociações" 1.0 0 -12087248 true "" "plot negociacoes"
+"N + D" 1.0 0 -5298144 true "" "plot decisoes-com-negociacoes"
+"Só Decisões" 1.0 0 -7171555 true "" "plot decisoes"
 
 @#$#@#$#@
 ## WHAT IS IT?
