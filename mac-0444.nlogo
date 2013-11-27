@@ -14,7 +14,7 @@ globals[
   gravidade-acao gravidade-fato valor-acao valor-fato ;ações
 ]
 
-to setup
+to setup ;ok
   clear-all
   ask patches [ set pcolor white ]
   cria-modelo
@@ -22,7 +22,7 @@ to setup
   reset-ticks
 end
 
-to cria-modelo
+to cria-modelo ;ok
   set-default-shape nos "circle"
   
   create-nos 11
@@ -45,7 +45,7 @@ to cria-modelo
   ]
 end
 
-to go
+to go ;ok
   ifelse estado = 0
   [
     cria-nova-acao
@@ -66,12 +66,13 @@ to go
       [
         finaliza
         set estado 0
+        tick
       ]
     ]
   ]
 end
 
-to zera-globals
+to zera-globals ;ok
   set total-gasto 0
   set valor-atual 0
   set decisoes 0
@@ -82,42 +83,123 @@ to zera-globals
 end
 
 to cria-nova-acao
-  ;um random para saber qual tipo de acao virá
+  ;um random para saber qual tipo de acao virá na proporcao 
   ;gera uma acao do tipo certo(zerando uma que já exista, a 0)
+  ;colorir seta 1
   ;faz o passo de andar para o valor
 end
 
-to manda-para-advogado
-  ;faz o passo de andar do valor para o advogado
+to manda-para-advogado ;ok?
+  ;faz o passo de andar do valor para o advogado, só colorir a seta, por enquanto não faz nada
 end
 
-to advogado-decide-caminho
-  ;um monte de se então; e.g. 
-  ;se estrategia = "negocia tudo" então negocia
+to advogado-decide-caminho ;ok
+  ifelse estrategia = "negocia tudo" 
+  [
+    negocia
+  ]
+  [
+    ifelse estrategia = "luta tudo"
+    [
+      juiz-decide
+    ]
+    [
+      ifelse estrategia = "luta +"
+      [
+        ifelse valor-acao > gravidade-acao
+        [
+          juiz-decide
+        ]
+        [
+         negocia
+        ]
+      ]
+      [ 
+        ifelse estrategia = "luta -"
+        [
+          ifelse valor-acao < gravidade-acao
+          [
+            juiz-decide
+          ]
+          [
+            negocia
+          ]
+       ]
+        [
+          ifelse estrategia = "luta 0"
+          [
+            ifelse valor-acao = gravidade-acao
+            [
+             juiz-decide
+            ]
+            [
+              negocia
+            ]
+          ]
+          [ 
+            ifelse estrategia = "negocia +"
+            [
+              ifelse valor-acao > gravidade-acao
+              [
+                negocia
+              ]
+              [
+                juiz-decide
+              ]     
+            ]
+            [
+              ifelse estrategia = "negocia -"
+              [
+                ifelse valor-acao > gravidade-acao
+                [
+                  negocia
+                ]
+                [
+                  juiz-decide
+                ]
+              ]
+              [;if     estrategia = "negocia 0"
+                ifelse valor-acao > gravidade-acao
+                [
+                  negocia
+                ]
+                [
+                  juiz-decide
+                ]
+              ]
+            ]
+          ]
+        ]
+      ]
+    ]
+  ]
+  ;atualiza decisoes
+  ;ou atualiza negociacoes
 end
 
 to negocia
   ;random se ela deu sucesso ou fracasso
-  set valor-atual valor-atual + 1
+  set valor-atual 1
 end
 
-to juiz-decide
+to juiz-decide ;ok
   ;se juiz-aleatorio então aleatoriza valor
   ;caso contrario
   set valor-atual valor-atual + 1 + valor-fato
 end
 
-to finaliza
-  ask no 10 [ set size total-gasto / 20 ]
-  if total-gasto > 40
+to finaliza ;ok
+  set total-gasto total-gasto + valor-atual
+  ask no 10 [ set size total-gasto / 100000 ]
+  if total-gasto > 200000
   [
     ask no 10 [ set color yellow ]
   ]
-  if total-gasto > 100
+  if total-gasto > 400000
   [
     ask no 10 [ set color orange ]
   ]
-  if total-gasto > 200
+  if total-gasto > 1000000
   [
     ask no 10 [ set color red ]
   ]
@@ -209,7 +291,7 @@ CHOOSER
 estrategia
 estrategia
 "negocia tudo" "luta tudo" "luta +" "luta -" "luta 0" "negocia +" "negocia -" "negocia 0"
-0
+1
 
 PLOT
 798
@@ -408,6 +490,21 @@ esta feature fica para uma versão futura
 12
 0.0
 1
+
+SLIDER
+10
+447
+320
+480
+probabilidade-de-sucesso-negociacao
+probabilidade-de-sucesso-negociacao
+0
+1
+1
+0.01
+1
+NIL
+HORIZONTAL
 
 @#$#@#$#@
 ## WHAT IS IT?
