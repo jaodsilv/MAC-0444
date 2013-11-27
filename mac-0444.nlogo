@@ -11,7 +11,7 @@ globals[
   fracasso-negociacoes
   estado
   
-  gravidade-acao gravidade-fato valor-acao valor-fato ;ações
+  gravidade-acao valor-acao gravidade-valor-fato ;ações
 ]
 
 to setup ;ok
@@ -82,11 +82,79 @@ to zera-globals ;ok
   set estado 0
 end
 
+to-report soma-proporcoes
+  report (proporcao-acao-gravidade1-valorMaior +
+    proporcao-acao-gravidade1-valorCorreto +
+    proporcao-acao-gravidade2-valorMenor +
+    proporcao-acao-gravidade2-valorCorreto +
+    proporcao-acao-gravidade2-valorMaior +
+    proporcao-acao-gravidade3-valorMaior +
+    proporcao-acao-gravidade3-valorCorreto +
+    proporcao-acao-gravidade3-valorMenor)
+end
+
+to-report soma-grav1
+  report (proporcao-acao-gravidade1-valorMaior + proporcao-acao-gravidade1-valorCorreto)
+end
+
+to-report soma-grav2
+  report (proporcao-acao-gravidade2-valorMaior + proporcao-acao-gravidade2-valorCorreto + proporcao-acao-gravidade2-valorMenor)
+end
+
+to-report soma-grav3
+  report (proporcao-acao-gravidade3-valorMaior + proporcao-acao-gravidade3-valorCorreto + proporcao-acao-gravidade3-valorMenor)
+end
+
 to cria-nova-acao
   ;um random para saber qual tipo de acao virá na proporcao 
   ;gera uma acao do tipo certo(zerando uma que já exista, a 0)
   ;colorir seta 1
   ;faz o passo de andar para o valor
+  let chance random-float 1
+  let p-g1-v3 proporcao-acao-gravidade1-valorMaior/soma-proporcoes
+  let p-g1-v2 p-g1-v3 + proporcao-acao-gravidade1-valorCorreto/soma-proporcoes
+  
+  let p-g2-v3 p-g1-v2 + proporcao-acao-gravidade2-valorMaior/soma-proporcoes
+  let p-g2-v2 p-g2-v3 + proporcao-acao-gravidade2-valorCorreto/soma-proporcoes
+  let p-g2-v1 p-g2-v2 + proporcao-acao-gravidade2-valorMenor/soma-proporcoes
+  
+  let p-g3-v3 p-g2-v1 + proporcao-acao-gravidade2-valorMaior/soma-proporcoes
+  let p-g3-v2 p-g3-v3 + proporcao-acao-gravidade2-valorCorreto/soma-proporcoes
+  let p-g3-v1 p-g3-v2 + proporcao-acao-gravidade2-valorMenor/soma-proporcoes
+  
+  ifelse p-g1-v3 <= chance
+  [ set gravidade-acao 1 set valor-acao 2 ]
+  [
+    ifelse p-g1-v2 <= chance
+    [ set gravidade-acao 1 set valor-acao 1 ]
+    [
+      ifelse p-g2-v3 <= chance
+      [ set gravidade-acao 2 set valor-acao 3 ]
+      [
+        ifelse p-g2-v2 <= chance
+      [ set gravidade-acao 2 set valor-acao 2 ]
+      [
+        ifelse p-g2-v1 <= chance
+      [ set gravidade-acao 2 set valor-acao 1 ]
+      [
+        ifelse p-g3-v3 <= chance
+      [ set gravidade-acao 3 set valor-acao 4 ]
+      [
+        ifelse p-g3-v2 <= chance
+      [ set gravidade-acao 3 set valor-acao 3 ]
+      [
+        if p-g3-v1 <= chance
+      [ set gravidade-acao 3 set valor-acao 2 ]
+
+      ]
+      ]
+      ]
+      ]
+      ]
+    ]
+  ]
+  
+
 end
 
 to manda-para-advogado ;ok?
@@ -185,7 +253,7 @@ end
 to juiz-decide ;ok
   ;se juiz-aleatorio então aleatoriza valor
   ;caso contrario
-  set valor-atual valor-atual + 1 + valor-fato
+  set valor-atual valor-atual + 1 + gravidade-valor-fato
 end
 
 to finaliza ;ok
@@ -291,7 +359,7 @@ CHOOSER
 estrategia
 estrategia
 "negocia tudo" "luta tudo" "luta +" "luta -" "luta 0" "negocia +" "negocia -" "negocia 0"
-1
+0
 
 PLOT
 798
@@ -406,7 +474,7 @@ proporcao-acao-gravidade3-valorMaior
 proporcao-acao-gravidade3-valorMaior
 0
 100
-50
+80
 1
 1
 NIL
@@ -421,7 +489,7 @@ proporcao-acao-gravidade3-valorCorreto
 proporcao-acao-gravidade3-valorCorreto
 0
 100
-50
+80
 1
 1
 NIL
@@ -436,7 +504,7 @@ proporcao-acao-gravidade3-valorMenor
 proporcao-acao-gravidade3-valorMenor
 0
 100
-50
+81
 1
 1
 NIL
