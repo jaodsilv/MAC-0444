@@ -1,15 +1,17 @@
 breed[ nos no ]        ;nós
-breed [ acoes acao ]   ;ações
 
 nos-own[ modificador visitas ]                                           ;modificador é o que é alterado quando passa por um determinado nó
-acoes-own[ gravidade-acao gravidade-fato valor-acao valor-fato ] ;ações tem a informação sobre o acontecido, a empresa tem acesso só ao valor-acao e a gravidade-acao
 
 globals[
   total-gasto
   valor-atual
   decisoes
   negociacoes
-  decisoes-com-negociacoes
+  sucesso-negociacoes
+  fracasso-negociacoes
+  estado
+  
+  gravidade-acao gravidade-fato valor-acao valor-fato ;ações
 ]
 
 to setup
@@ -22,41 +24,61 @@ end
 
 to cria-modelo
   set-default-shape nos "circle"
+  
   create-nos 11
   
-  ask no 0 [ set color green ]
-  ask no 1 [ set color yellow ]
-  ask no 2 [ set color red ]
-  ask no 3 [ set color green create-links-from (turtle-set no 0 no 1) ]
-  ask no 4 [ set color yellow create-links-from (turtle-set no 0 no 1 no 2) ]
-  ask no 5 [ set color orange create-links-from (turtle-set no 1 no 2) ]
-  ask no 6 [ set color red create-link-from no 2 ]
-  ask no 7 [ set color black create-links-from (turtle-set no 3 no 4 no 5 no 6) ]
-  ask no 8 [ set color green create-link-from no 7 ]
-  ask no 9 [ set color yellow create-links-from (turtle-set no 7 no 8) ]
-  ask no 10 [ set color green create-links-from (turtle-set no 8 no 9) ]
+  ask no 0 [ set color green setxy 4 4 set size 1.5 ]
+  ask no 1 [ set color yellow setxy 4 12 set size 2 ]
+  ask no 2 [ set color red setxy 4 20 set size 2.5 ]
+  ask no 3 [ set color green create-links-from (turtle-set no 0 no 1) setxy 10 4 set size 1.5 ]
+  ask no 4 [ set color yellow create-links-from (turtle-set no 0 no 1 no 2) setxy 10 12 set size 2 ]
+  ask no 5 [ set color orange create-links-from (turtle-set no 1 no 2) setxy 10 20 set size 2.5 ]
+  ask no 6 [ set color red create-link-from no 2 setxy 10 28 set size 3 ]
+  ask no 7 [ set color black create-links-from (turtle-set no 3 no 4 no 5 no 6) setxy 16 16 set size 3.5]
+  ask no 8 [ set color green create-link-from no 7 setxy 22 10 set size 3 ]
+  ask no 9 [ set color yellow create-links-from (turtle-set no 7 no 8) setxy 22 22 set size 3 ]
+  ask no 10 [ set color green create-links-from (turtle-set no 8 no 9) setxy 28 16 set size 0 ]
   
   ask nos
   [
     set label-color black
-    ;update-aparencia-no
   ]
-  create-acoes 1
-  
 end
 
 to go
-  cria-nova-acao
-  manda-para-advogado
-  advogado-decide-caminho
-  finaliza
+  ifelse estado = 0
+  [
+    cria-nova-acao
+    set estado 1
+  ]
+  [
+    ifelse estado = 1
+    [
+      manda-para-advogado
+      set estado 2
+    ]
+    [
+      ifelse estado = 2
+      [
+        advogado-decide-caminho
+        set estado 3
+      ]
+      [
+        finaliza
+        set estado 0
+      ]
+    ]
+  ]
 end
 
 to zera-globals
   set total-gasto 0
+  set valor-atual 0
   set decisoes 0
   set negociacoes 0
-  set decisoes-com-negociacoes 0
+  set sucesso-negociacoes 0
+  set fracasso-negociacoes 0
+  set estado 0
 end
 
 to cria-nova-acao
@@ -76,15 +98,29 @@ end
 
 to negocia
   ;random se ela deu sucesso ou fracasso
+  set valor-atual valor-atual + 1
 end
 
 to juiz-decide
   ;se juiz-aleatorio então aleatoriza valor
   ;caso contrario
-  set valor-atual valor-atual + [valor-fato] of acao 0
+  set valor-atual valor-atual + 1 + valor-fato
 end
 
 to finaliza
+  ask no 10 [ set size total-gasto / 20 ]
+  if total-gasto > 40
+  [
+    ask no 10 [ set color yellow ]
+  ]
+  if total-gasto > 100
+  [
+    ask no 10 [ set color orange ]
+  ]
+  if total-gasto > 200
+  [
+    ask no 10 [ set color red ]
+  ]
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
@@ -92,8 +128,8 @@ GRAPHICS-WINDOW
 10
 780
 485
-16
-16
+-1
+-1
 13.455
 1
 10
@@ -104,10 +140,10 @@ GRAPHICS-WINDOW
 1
 1
 1
--16
-16
--16
-16
+0
+32
+0
+32
 0
 0
 1
@@ -194,10 +230,10 @@ PENS
 "default" 1.0 0 -16777216 true "" "plot total-gasto"
 
 SWITCH
-166
-70
-314
-103
+163
+74
+311
+107
 Juiz-aleatório
 Juiz-aleatório
 1
@@ -235,57 +271,12 @@ NIL
 HORIZONTAL
 
 SLIDER
-10
+9
 187
-315
+316
 220
-proporcao-acao-gravidade1-valorMenor
-proporcao-acao-gravidade1-valorMenor
-0
-100
-50
-1
-1
-NIL
-HORIZONTAL
-
-SLIDER
-10
-224
-317
-257
 proporcao-acao-gravidade2-valorMaior
 proporcao-acao-gravidade2-valorMaior
-0
-100
-50
-1
-1
-NIL
-HORIZONTAL
-
-SLIDER
-10
-262
-318
-295
-proporcao-acao-gravidade2-valorCorreto
-proporcao-acao-gravidade2-valorCorreto
-0
-100
-50
-1
-1
-NIL
-HORIZONTAL
-
-SLIDER
-11
-300
-319
-333
-proporcao-acao-gravidade2-valorMenor
-proporcao-acao-gravidade2-valorMenor
 0
 100
 50
@@ -296,11 +287,56 @@ HORIZONTAL
 
 SLIDER
 9
-338
+225
+317
+258
+proporcao-acao-gravidade2-valorCorreto
+proporcao-acao-gravidade2-valorCorreto
+0
+100
+50
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+10
+263
+318
+296
+proporcao-acao-gravidade2-valorMenor
+proporcao-acao-gravidade2-valorMenor
+0
+100
+50
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+8
+301
+319
+334
+proporcao-acao-gravidade3-valorMaior
+proporcao-acao-gravidade3-valorMaior
+0
+100
+50
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+9
+339
 320
-371
-proporcao-acao-gravidade3-valorMaior
-proporcao-acao-gravidade3-valorMaior
+372
+proporcao-acao-gravidade3-valorCorreto
+proporcao-acao-gravidade3-valorCorreto
 0
 100
 50
@@ -310,25 +346,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-10
+9
 376
-321
+320
 409
-proporcao-acao-gravidade3-valorCorreto
-proporcao-acao-gravidade3-valorCorreto
-0
-100
-50
-1
-1
-NIL
-HORIZONTAL
-
-SLIDER
-10
-413
-321
-446
 proporcao-acao-gravidade3-valorMenor
 proporcao-acao-gravidade3-valorMenor
 0
@@ -344,7 +365,7 @@ PLOT
 186
 1248
 336
-Decisoes
+Negociações
 Tempo
 Decisoes
 0.0
@@ -355,8 +376,8 @@ true
 true
 "" ""
 PENS
-"Sucesso" 1.0 0 -10899396 true "" "plot sucesso-decisoes"
-"Fracasso" 1.0 0 -8053223 true "" "plot fracasso-decisoes"
+"Sucesso" 1.0 0 -10899396 true "" "plot sucesso-negociacoes"
+"Fracasso" 1.0 0 -8053223 true "" "plot fracasso-negociacoes"
 
 PLOT
 798
@@ -367,16 +388,26 @@ Decisões X Negociações
 Tempo
 NIL
 0.0
-10.0
+1000.0
 0.0
-10.0
+1000.0
 true
 true
 "" ""
 PENS
 "Só Negociações" 1.0 0 -12087248 true "" "plot negociacoes"
-"N + D" 1.0 0 -5298144 true "" "plot decisoes-com-negociacoes"
+"N + D" 1.0 0 -5298144 true "" "plot fracasso-negociacoes"
 "Só Decisões" 1.0 0 -7171555 true "" "plot decisoes"
+
+TEXTBOX
+167
+47
+317
+77
+esta feature fica para uma versão futura
+12
+0.0
+1
 
 @#$#@#$#@
 ## WHAT IS IT?
