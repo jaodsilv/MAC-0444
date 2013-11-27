@@ -114,6 +114,7 @@ to cria-nova-acao
   ;gera uma acao do tipo certo(zerando uma que já exista, a 0)
   ;colorir seta 1
   ;faz o passo de andar para o valor
+  restaura-cor
   let chance random-float 1
   let p-g1-v3 proporcao-acao-gravidade1-valorMaior / soma-proporcoes
   let p-g1-v2 p-g1-v3 + (proporcao-acao-gravidade1-valorCorreto / soma-proporcoes)
