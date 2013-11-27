@@ -123,32 +123,32 @@ to cria-nova-acao
   let p-g3-v3 p-g2-v1 + (proporcao-acao-gravidade2-valorMaior / soma-proporcoes)
   let p-g3-v2 p-g3-v3 + (proporcao-acao-gravidade2-valorCorreto / soma-proporcoes)
 
-  ifelse p-g1-v3 <= chance
+  ifelse p-g1-v3 > chance
   [ set gravidade-acao 1 set valor-acao 2 troca-cor 0 4 set posicao-old 0 ]
   [
-    ifelse p-g1-v2 <= chance
+    ifelse p-g1-v2 > chance
     [ set gravidade-acao 1 set valor-acao 1 troca-cor 0 3 set posicao-old 0 ]
     [
-      ifelse p-g2-v3 <= chance
+      ifelse p-g2-v3 > chance
       [ set gravidade-acao 2 set valor-acao 3 troca-cor 1 5 set posicao-old 1 ]
       [
-        ifelse p-g2-v2 <= chance
-      [ set gravidade-acao 2 set valor-acao 2 troca-cor 1 4 set posicao-old 1 ]
-      [
-        ifelse p-g2-v1 <= chance
-      [ set gravidade-acao 2 set valor-acao 1 troca-cor 1 3 set posicao-old 1 ]
-      [
-        ifelse p-g3-v3 <= chance
-      [ set gravidade-acao 3 set valor-acao 4 troca-cor 2 6 set posicao-old 2 ]
-      [
-        ifelse p-g3-v2 <= chance
-      [ set gravidade-acao 3 set valor-acao 3 troca-cor 2 5 set posicao-old 2 ]
-      [
-         set gravidade-acao 3 set valor-acao 2 troca-cor 2 4 set posicao-old 2
-      ]
-      ]
-      ]
-      ]
+        ifelse p-g2-v2 > chance
+        [ set gravidade-acao 2 set valor-acao 2 troca-cor 1 4 set posicao-old 1 ]
+        [
+          ifelse p-g2-v1 > chance
+          [ set gravidade-acao 2 set valor-acao 1 troca-cor 1 3 set posicao-old 1 ]
+          [
+            ifelse p-g3-v3 > chance
+            [ set gravidade-acao 3 set valor-acao 4 troca-cor 2 6 set posicao-old 2 ]
+            [
+              ifelse p-g3-v2 > chance
+              [ set gravidade-acao 3 set valor-acao 3 troca-cor 2 5 set posicao-old 2 ]
+              [
+                set gravidade-acao 3 set valor-acao 2 troca-cor 2 4 set posicao-old 2
+              ]
+            ]
+          ]
+        ]
       ]
     ]
   ]
@@ -157,14 +157,14 @@ to cria-nova-acao
   let p-g1 soma-grav1 / soma-proporcoes
   let p-g2 p-g1 + (soma-grav2 / soma-proporcoes)
   
-  ifelse p-g1 <= chance
+  ifelse p-g1 > chance
   [ set gravidade-valor-fato 1 ]
   [
-    ifelse p-g1 <= chance
-  [ set gravidade-valor-fato 2 ]
-  [
-    set gravidade-valor-fato 3
-  ]
+    ifelse p-g2 > chance
+    [ set gravidade-valor-fato 2 ]
+    [
+      set gravidade-valor-fato 3
+    ]
   ]
   
   
