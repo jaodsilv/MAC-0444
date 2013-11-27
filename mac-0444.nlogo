@@ -10,6 +10,7 @@ globals[
   sucesso-negociacoes
   fracasso-negociacoes
   estado
+  posicao-old
   
   gravidade-acao valor-acao gravidade-valor-fato ;ações
 ]
@@ -80,6 +81,7 @@ to zera-globals ;ok
   set sucesso-negociacoes 0
   set fracasso-negociacoes 0
   set estado 0
+  set posicao-old 0
 end
 
 to-report soma-proporcoes
@@ -112,37 +114,37 @@ to cria-nova-acao
   ;faz o passo de andar para o valor
   let chance random-float 1
   let p-g1-v3 proporcao-acao-gravidade1-valorMaior / soma-proporcoes
-  let p-g1-v2 p-g1-v3 + proporcao-acao-gravidade1-valorCorreto / soma-proporcoes
+  let p-g1-v2 p-g1-v3 + (proporcao-acao-gravidade1-valorCorreto / soma-proporcoes)
   
-  let p-g2-v3 p-g1-v2 + proporcao-acao-gravidade2-valorMaior / soma-proporcoes
-  let p-g2-v2 p-g2-v3 + proporcao-acao-gravidade2-valorCorreto / soma-proporcoes
-  let p-g2-v1 p-g2-v2 + proporcao-acao-gravidade2-valorMenor / soma-proporcoes
+  let p-g2-v3 p-g1-v2 + (proporcao-acao-gravidade2-valorMaior / soma-proporcoes)
+  let p-g2-v2 p-g2-v3 + (proporcao-acao-gravidade2-valorCorreto / soma-proporcoes)
+  let p-g2-v1 p-g2-v2 + (proporcao-acao-gravidade2-valorMenor / soma-proporcoes)
   
-  let p-g3-v3 p-g2-v1 + proporcao-acao-gravidade2-valorMaior / soma-proporcoes
-  let p-g3-v2 p-g3-v3 + proporcao-acao-gravidade2-valorCorreto / soma-proporcoes
+  let p-g3-v3 p-g2-v1 + (proporcao-acao-gravidade2-valorMaior / soma-proporcoes)
+  let p-g3-v2 p-g3-v3 + (proporcao-acao-gravidade2-valorCorreto / soma-proporcoes)
 
   ifelse p-g1-v3 <= chance
-  [ set gravidade-acao 1 set valor-acao 2 ]
+  [ set gravidade-acao 1 set valor-acao 2 troca-cor 0 4 set posicao-old 0 ]
   [
     ifelse p-g1-v2 <= chance
-    [ set gravidade-acao 1 set valor-acao 1 ]
+    [ set gravidade-acao 1 set valor-acao 1 troca-cor 0 3 set posicao-old 0 ]
     [
       ifelse p-g2-v3 <= chance
-      [ set gravidade-acao 2 set valor-acao 3 ]
+      [ set gravidade-acao 2 set valor-acao 3 troca-cor 1 5 set posicao-old 1 ]
       [
         ifelse p-g2-v2 <= chance
-      [ set gravidade-acao 2 set valor-acao 2 ]
+      [ set gravidade-acao 2 set valor-acao 2 troca-cor 1 4 set posicao-old 1 ]
       [
         ifelse p-g2-v1 <= chance
-      [ set gravidade-acao 2 set valor-acao 1 ]
+      [ set gravidade-acao 2 set valor-acao 1 troca-cor 1 3 set posicao-old 1 ]
       [
         ifelse p-g3-v3 <= chance
-      [ set gravidade-acao 3 set valor-acao 4 ]
+      [ set gravidade-acao 3 set valor-acao 4 troca-cor 2 6 set posicao-old 2 ]
       [
         ifelse p-g3-v2 <= chance
-      [ set gravidade-acao 3 set valor-acao 3 ]
+      [ set gravidade-acao 3 set valor-acao 3 troca-cor 2 5 set posicao-old 2 ]
       [
-         set gravidade-acao 3 set valor-acao 2
+         set gravidade-acao 3 set valor-acao 2 troca-cor 2 4 set posicao-old 2
       ]
       ]
       ]
@@ -152,8 +154,8 @@ to cria-nova-acao
   ]
   
   set chance random-float 1
-  let p-g1 soma-grav1
-  let p-g2 p-g1 + soma-grav2
+  let p-g1 soma-grav1 / soma-proporcoes
+  let p-g2 p-g1 + (soma-grav2 / soma-proporcoes)
   
   ifelse p-g1 <= chance
   [ set gravidade-valor-fato 1 ]
@@ -291,6 +293,56 @@ to finaliza ;ok
   [
     ask no 10 [ set color red ]
   ]
+end
+
+
+to restaura-cor [ a b ]
+  troca-cor-link a b gray
+  ifelse a < 3
+  [
+    ask no 0 [ set color green]
+    ask no 1 [ set color yellow ]
+    ask no 2 [ set color red ]
+  ]
+  [
+    ifelse a < 7
+    [
+      ask no 3 [ set color green ]
+      ask no 4 [ set color yellow ]
+      ask no 5 [ set color orange ]
+      ask no 6 [ set color red ]
+    ]
+    [
+      ifelse a = 7
+      [
+        ask no 7 [ set color black ]
+      ]
+      [
+        ifelse a = 8
+        [
+          ask no 8 [ set color green ]
+        ]
+        [
+          ifelse a = 9
+          [
+            ask no 9 [ set color orange ]
+          ]
+          [;10
+            ask no 10 [ set color green ]
+          ]
+        ]
+      ]
+    ]
+  ]
+end
+
+to troca-cor [ a b ]
+  ask no a [ set color blue ]
+  troca-cor-link a b green
+end
+
+to troca-cor-link [a b cor]
+  ask link a b [set color cor]
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
@@ -568,16 +620,6 @@ PENS
 "Só Negociações" 1.0 0 -12087248 true "" "plot sucesso-negociacoes"
 "N + D" 1.0 0 -5298144 true "" "plot fracasso-negociacoes"
 "Só Decisões" 1.0 0 -7171555 true "" "plot decisoes"
-
-TEXTBOX
-167
-47
-317
-77
-esta feature fica para uma versão futura
-12
-0.0
-1
 
 SLIDER
 10
