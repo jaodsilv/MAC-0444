@@ -83,6 +83,7 @@ to zera-globals ;ok
   set fracasso-negociacoes 0
   set estado 0
   set posicao-old 0
+  set posicao 0
 end
 
 to-report soma-proporcoes
@@ -125,27 +126,27 @@ to cria-nova-acao
   let p-g3-v2 p-g3-v3 + (proporcao-acao-gravidade2-valorCorreto / soma-proporcoes)
 
   ifelse p-g1-v3 > chance
-  [ set gravidade-acao 1 set valor-acao 2 troca-cor set posicao-old 0 set posicao 4 ]
+  [ set gravidade-acao 1 set valor-acao 2 set posicao-old 0 set posicao 4 troca-cor]
   [
     ifelse p-g1-v2 > chance
-    [ set gravidade-acao 1 set valor-acao 1 troca-cor set posicao-old 0 set posicao 3 ]
+    [ set gravidade-acao 1 set valor-acao 1 set posicao-old 0 set posicao 3 troca-cor]
     [
       ifelse p-g2-v3 > chance
-      [ set gravidade-acao 2 set valor-acao 3 troca-cor set posicao-old 1 set posicao 5 ]
+      [ set gravidade-acao 2 set valor-acao 3 set posicao-old 1 set posicao 5 troca-cor]
       [
         ifelse p-g2-v2 > chance
-        [ set gravidade-acao 2 set valor-acao 2 troca-cor set posicao-old 1 set posicao 4 ]
+        [ set gravidade-acao 2 set valor-acao 2 set posicao-old 1 set posicao 4 troca-cor]
         [
           ifelse p-g2-v1 > chance
-          [ set gravidade-acao 2 set valor-acao 1 troca-cor set posicao-old 1 set posicao 3 ]
+          [ set gravidade-acao 2 set valor-acao 1 set posicao-old 1 set posicao 3 troca-cor]
           [
             ifelse p-g3-v3 > chance
-            [ set gravidade-acao 3 set valor-acao 4 troca-cor set posicao-old 2 set posicao 6 ]
+            [ set gravidade-acao 3 set valor-acao 4 set posicao-old 2 set posicao 6 troca-cor]
             [
               ifelse p-g3-v2 > chance
-              [ set gravidade-acao 3 set valor-acao 3 troca-cor set posicao-old 2 set posicao 5 ]
+              [ set gravidade-acao 3 set valor-acao 3 set posicao-old 2 set posicao 5 troca-cor]
               [
-                set gravidade-acao 3 set valor-acao 2 troca-cor set posicao-old 2 set posicao 4
+                set gravidade-acao 3 set valor-acao 2 set posicao-old 2 set posicao 4 troca-cor
               ]
             ]
           ]
@@ -172,6 +173,7 @@ to cria-nova-acao
 end
 
 to manda-para-advogado ;ok?
+  
   ;faz o passo de andar do valor para o advogado, só colorir a seta, por enquanto não faz nada
 end
 
@@ -261,8 +263,13 @@ end
 
 to negocia
   ;random se ela deu sucesso ou fracasso
+  restaura-cor
+  set posicao-old posicao
+  set posicao 8
+  troca-cor
+
   ifelse probabilidade-de-sucesso-negociacao <= random-float 1
-  [ set valor-atual valor-acao set sucesso-negociacoes sucesso-negociacoes + 1 ]
+  [ set valor-atual valor-acao set sucesso-negociacoes sucesso-negociacoes + 1]
   [ set valor-atual 1 juiz-decide set fracasso-negociacoes fracasso-negociacoes + 1 ]
 end
 
