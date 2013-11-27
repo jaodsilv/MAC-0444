@@ -10,7 +10,7 @@ globals[
   sucesso-negociacoes
   fracasso-negociacoes
   estado
-  posicao-old
+  posicao-old posicao posicao-new
   
   gravidade-acao valor-acao gravidade-valor-fato ;ações
 ]
@@ -44,6 +44,7 @@ to cria-modelo ;ok
   [
     set label-color black
   ]
+  ask links [ set thickness 0.1]
 end
 
 to go ;ok
@@ -124,19 +125,19 @@ to cria-nova-acao
   let p-g3-v2 p-g3-v3 + (proporcao-acao-gravidade2-valorCorreto / soma-proporcoes)
 
   ifelse p-g1-v3 > chance
-  [ set gravidade-acao 1 set valor-acao 2 troca-cor 0 4 set posicao-old 0 ]
+  [ set gravidade-acao 1 set valor-acao 2 troca-cor set posicao-old 0 set posicao 4]
   [
     ifelse p-g1-v2 > chance
-    [ set gravidade-acao 1 set valor-acao 1 troca-cor 0 3 set posicao-old 0 ]
+    [ set gravidade-acao 1 set valor-acao 1 troca-cor set posicao-old 0 set posicao 3]
     [
       ifelse p-g2-v3 > chance
-      [ set gravidade-acao 2 set valor-acao 3 troca-cor 1 5 set posicao-old 1 ]
+      [ set gravidade-acao 2 set valor-acao 3 troca-cor set posicao-old 1 set posicao 5]
       [
         ifelse p-g2-v2 > chance
-        [ set gravidade-acao 2 set valor-acao 2 troca-cor 1 4 set posicao-old 1 ]
+        [ set gravidade-acao 2 set valor-acao 2 troca-cor set posicao-old 1 set posicao 4]
         [
           ifelse p-g2-v1 > chance
-          [ set gravidade-acao 2 set valor-acao 1 troca-cor 1 3 set posicao-old 1 ]
+          [ set gravidade-acao 2 set valor-acao 1 troca-cor 1 3 set posicao-old 1 set posicao ]
           [
             ifelse p-g3-v3 > chance
             [ set gravidade-acao 3 set valor-acao 4 troca-cor 2 6 set posicao-old 2 ]
@@ -297,7 +298,7 @@ end
 
 
 to restaura-cor [ a b ]
-  troca-cor-link a b gray
+  troca-cor-link a b gray 0.1
   ifelse a < 3
   [
     ask no 0 [ set color green]
@@ -338,11 +339,11 @@ end
 
 to troca-cor [ a b ]
   ask no a [ set color blue ]
-  troca-cor-link a b green
+  troca-cor-link a b black 0.3
 end
 
-to troca-cor-link [a b cor]
-  ask link a b [set color cor]
+to troca-cor-link [a b cor thick]
+  ask link a b [set color cor set thickness thick ]
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
