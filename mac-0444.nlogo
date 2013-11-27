@@ -175,6 +175,10 @@ end
 to manda-para-advogado ;ok?
   
   ;faz o passo de andar do valor para o advogado, só colorir a seta, por enquanto não faz nada
+  restaura-cor
+  set posicao-old posicao
+  set posicao 7
+  troca-cor
 end
 
 to advogado-decide-caminho ;ok
@@ -284,6 +288,11 @@ to juiz-decide ;ok
     set valor-atual valor-atual + 1 + gravidade-valor-fato
   ]
   set decisoes decisoes + 1
+  
+  restaura-cor
+  set posicao-old posicao
+  set posicao 9
+  troca-cor
 end
 
 to finaliza ;ok
@@ -301,6 +310,11 @@ to finaliza ;ok
   [
     ask no 10 [ set color red ]
   ]
+  
+  restaura-cor
+  set posicao-old posicao
+  set posicao 10
+  troca-cor
 end
 
 
