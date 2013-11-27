@@ -618,9 +618,9 @@ Negociações
 Tempo
 Decisoes
 0.0
-10000.0
+10.0
 0.0
-1000.0
+10.0
 true
 true
 "" ""
@@ -637,15 +637,14 @@ Decisões X Negociações
 Tempo
 NIL
 0.0
-1000.0
+10.0
 0.0
-1000.0
+10.0
 true
 true
 "" ""
 PENS
-"Só Negociações" 1.0 0 -12087248 true "" "plot sucesso-negociacoes"
-"N + D" 1.0 0 -5298144 true "" "plot fracasso-negociacoes"
+"Só Negociações" 1.0 0 -5298144 true "" "plot sucesso-negociacoes + fracasso-negociacoes"
 "Só Decisões" 1.0 0 -7171555 true "" "plot decisoes"
 
 SLIDER
