@@ -28,23 +28,24 @@ to cria-modelo ;ok
   
   create-nos 11
   
-  ask no 0 [ set color green setxy 4 4 set size 1.5 ]
-  ask no 1 [ set color yellow setxy 4 12 set size 2 ]
-  ask no 2 [ set color red setxy 4 20 set size 2.5 ]
-  ask no 3 [ set color green create-links-from (turtle-set no 0 no 1) setxy 10 4 set size 1.5 ]
-  ask no 4 [ set color yellow create-links-from (turtle-set no 0 no 1 no 2) setxy 10 12 set size 2 ]
-  ask no 5 [ set color orange create-links-from (turtle-set no 1 no 2) setxy 10 20 set size 2.5 ]
-  ask no 6 [ set color red create-link-from no 2 setxy 10 28 set size 3 ]
-  ask no 7 [ set color black create-links-from (turtle-set no 3 no 4 no 5 no 6) setxy 16 16 set size 3.5]
-  ask no 8 [ set color green create-link-from no 7 setxy 22 10 set size 3 ]
-  ask no 9 [ set color yellow create-links-from (turtle-set no 7 no 8) setxy 22 22 set size 3 ]
-  ask no 10 [ set color green create-links-from (turtle-set no 8 no 9) setxy 28 16 set size 0 ]
-  
   ask nos
   [
     set label-color black
   ]
   ask links [ set thickness 0.1]
+  
+  ask no 0 [ set color green setxy 4 4 set size 1.5 set label "gravidade 1" ]
+  ask no 1 [ set color yellow setxy 4 12 set size 2 set label "gravidade 2" ]
+  ask no 2 [ set color red setxy 4 20 set size 2.5 set label "gravidade 3" ]
+  ask no 3 [ set color green create-links-from (turtle-set no 0 no 1) setxy 10 4 set size 1.5 set label "valor 1" ]
+  ask no 4 [ set color yellow create-links-from (turtle-set no 0 no 1 no 2) setxy 10 12 set size 2 set label "valor 2"]
+  ask no 5 [ set color orange create-links-from (turtle-set no 1 no 2) setxy 10 20 set size 2.5 set label "valor 3" ]
+  ask no 6 [ set color red create-link-from no 2 setxy 10 28 set size 3 set label "valor 4" ]
+  ask no 7 [ set color black create-links-from (turtle-set no 3 no 4 no 5 no 6) setxy 16 16 set size 3.5 set label "advogado" set label-color red]
+  ask no 8 [ set color green create-link-from no 7 setxy 22 10 set size 3 set label "negociação" ]
+  ask no 9 [ set color yellow create-links-from (turtle-set no 7 no 8) setxy 22 22 set size 3 set label "decisão do juiz" ]
+  ask no 10 [ set color green create-links-from (turtle-set no 8 no 9) setxy 28 16 set size 0 set label "custo total" ]
+  
 end
 
 to go ;ok
@@ -365,7 +366,10 @@ to troca-cor
 end
 
 to troca-cor-link [a b cor thick]
-  ask link a b [set color cor set thickness thick ]
+  if link a b != nobody
+  [
+    ask link a b [set color cor set thickness thick ]
+  ]
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
