@@ -125,27 +125,27 @@ to cria-nova-acao
   let p-g3-v2 p-g3-v3 + (proporcao-acao-gravidade2-valorCorreto / soma-proporcoes)
 
   ifelse p-g1-v3 > chance
-  [ set gravidade-acao 1 set valor-acao 2 troca-cor set posicao-old 0 set posicao 4]
+  [ set gravidade-acao 1 set valor-acao 2 troca-cor set posicao-old 0 set posicao 4 ]
   [
     ifelse p-g1-v2 > chance
-    [ set gravidade-acao 1 set valor-acao 1 troca-cor set posicao-old 0 set posicao 3]
+    [ set gravidade-acao 1 set valor-acao 1 troca-cor set posicao-old 0 set posicao 3 ]
     [
       ifelse p-g2-v3 > chance
-      [ set gravidade-acao 2 set valor-acao 3 troca-cor set posicao-old 1 set posicao 5]
+      [ set gravidade-acao 2 set valor-acao 3 troca-cor set posicao-old 1 set posicao 5 ]
       [
         ifelse p-g2-v2 > chance
-        [ set gravidade-acao 2 set valor-acao 2 troca-cor set posicao-old 1 set posicao 4]
+        [ set gravidade-acao 2 set valor-acao 2 troca-cor set posicao-old 1 set posicao 4 ]
         [
           ifelse p-g2-v1 > chance
-          [ set gravidade-acao 2 set valor-acao 1 troca-cor 1 3 set posicao-old 1 set posicao ]
+          [ set gravidade-acao 2 set valor-acao 1 troca-cor set posicao-old 1 set posicao 3 ]
           [
             ifelse p-g3-v3 > chance
-            [ set gravidade-acao 3 set valor-acao 4 troca-cor 2 6 set posicao-old 2 ]
+            [ set gravidade-acao 3 set valor-acao 4 troca-cor set posicao-old 2 set posicao 6 ]
             [
               ifelse p-g3-v2 > chance
-              [ set gravidade-acao 3 set valor-acao 3 troca-cor 2 5 set posicao-old 2 ]
+              [ set gravidade-acao 3 set valor-acao 3 troca-cor set posicao-old 2 set posicao 5 ]
               [
-                set gravidade-acao 3 set valor-acao 2 troca-cor 2 4 set posicao-old 2
+                set gravidade-acao 3 set valor-acao 2 troca-cor set posicao-old 2 set posicao 4
               ]
             ]
           ]
@@ -297,16 +297,16 @@ to finaliza ;ok
 end
 
 
-to restaura-cor [ a b ]
-  troca-cor-link a b gray 0.1
-  ifelse a < 3
+to restaura-cor
+  troca-cor-link posicao-old posicao gray 0.1
+  ifelse posicao-old < 3
   [
     ask no 0 [ set color green]
     ask no 1 [ set color yellow ]
     ask no 2 [ set color red ]
   ]
   [
-    ifelse a < 7
+    ifelse posicao-old < 7
     [
       ask no 3 [ set color green ]
       ask no 4 [ set color yellow ]
@@ -314,17 +314,17 @@ to restaura-cor [ a b ]
       ask no 6 [ set color red ]
     ]
     [
-      ifelse a = 7
+      ifelse posicao-old = 7
       [
         ask no 7 [ set color black ]
       ]
       [
-        ifelse a = 8
+        ifelse posicao-old = 8
         [
           ask no 8 [ set color green ]
         ]
         [
-          ifelse a = 9
+          ifelse posicao-old = 9
           [
             ask no 9 [ set color orange ]
           ]
@@ -337,9 +337,9 @@ to restaura-cor [ a b ]
   ]
 end
 
-to troca-cor [ a b ]
-  ask no a [ set color blue ]
-  troca-cor-link a b black 0.3
+to troca-cor
+  ask no posicao-old [ set color blue ]
+  troca-cor-link posicao-old posicao black 0.3
 end
 
 to troca-cor-link [a b cor thick]
